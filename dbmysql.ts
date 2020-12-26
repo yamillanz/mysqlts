@@ -12,7 +12,7 @@ interface ParamsData {
 
 class MySqlDBConecction {
 
-    cnn: any;
+    private cnn: any;
 
     constructor(
         private host: string = "",
@@ -20,6 +20,7 @@ class MySqlDBConecction {
         private pass: string = "",
         private database: string = "",
     ) { }
+    
     async conectarBD() {
         this.cnn = await mysql.createPool({
             connectionLimit: 2,
@@ -115,13 +116,6 @@ class MySqlDBConecction {
         const result = await this.cnn.query(`SELECT * FROM ${table} WHERE ${id} = ? `, [idvalue]);
         return result;
 
-    }
-
-    async findOneUserClient(param: ParamsData) {
-        const { table, id, idvalue } = param;
-        if (!idvalue && !id) { return { error: "Incomplete Parameters!!!" } }
-        const result = await this.cnn.query(`SELECT * FROM ${table} JOIN clientes c ON ${table}.idCliente = c.id JOIN roles_usuarios ON ${table}.idRolUsuario = roles_usuarios.id JOIN paises p ON p.id = c.idPais WHERE ${table}.${id} = ?`, idvalue);
-        return result;
     }
 
 }
